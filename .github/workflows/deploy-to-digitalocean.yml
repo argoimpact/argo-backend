@@ -29,8 +29,8 @@ jobs:
           port: 22 # Default SSH port, adjust if different
           script: |
             docker login ghcr.io -u ${{ github.actor }} --password-stdin <<< ${{ secrets.GITHUB_TOKEN }}
-            docker pull ghcr.io/${{ github.repository }}:latest
+            docker pull ghcr.io/${{ github.repository }}:main
             # Replace or restart your container below. This is just an example.
             docker stop argo-backend || true
             docker rm argo-backend || true
-            docker run -d --name argo-backend ghcr.io/${{ github.repository }}:latest
+            docker run -d --name argo-backend ghcr.io/${{ github.repository }}:main
