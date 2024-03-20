@@ -17,6 +17,7 @@ jobs:
         run: |
           echo "The triggering workflow failed. Deployment will not proceed."
           exit 1
+
       - name: Checkout repository
         uses: actions/checkout@v3
 
@@ -26,11 +27,11 @@ jobs:
           host: ${{ secrets.DROPLET_IP }}
           username: ${{ secrets.DROPLET_USER }}
           key: ${{ secrets.DROPLET_SSH_KEY }}
-          port: 22 # Default SSH port, adjust if different
+          port: 22
           script: |
             docker login ghcr.io -u ${{ github.actor }} --password-stdin <<< ${{ secrets.GITHUB_TOKEN }}
             docker pull ghcr.io/${{ github.repository }}:main
-            # Replace or restart your container below. This is just an example.
             docker stop argo-backend || true
             docker rm argo-backend || true
-            docker run -d --name argo-backend ghcr.io/${{ github.repository }}:main
+            # Now includes port mapping
+            docker run -d --name argo-backend -p 8000:8000 ghcr.io/${{ github.repository }}:main
