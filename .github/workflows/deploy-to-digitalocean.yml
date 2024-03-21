@@ -35,3 +35,4 @@ jobs:
             docker rm argo-backend || true
             # Now includes port mapping
             docker run -d --name argo-backend -p 8000:8000 ghcr.io/${{ github.repository }}:main
+            echo "should have the docker image running now"
