@@ -2,7 +2,7 @@ from dotenv import load_dotenv
 from jose import JWTError, jwt
 import os
 
-from exceptions import CredentialsException
+from app.exceptions import CredentialsException
 
 load_dotenv()
 

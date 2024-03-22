@@ -6,3 +6,4 @@ class RFP(BaseModel):
     title: str
     description: str
     user_id: str
+    file_id: str

@@ -1,19 +1,46 @@
+import uuid
+
+from redis import Redis
 from fastapi import APIRouter, Depends, HTTPException, status
 from app.dependencies import get_current_user
+from app.exceptions import InvalidFileUploadException
 from app.models.user import User
 from app.models.rfp import RFP
-from app.schemas.rfp import RFPCreate, RFPUpdate
+from app.schemas.rfp import RFPCreate, RFPUpdate, RFPResponse
 
 router = APIRouter(dependencies=[Depends(get_current_user)])
+redis_client = Redis(host="redis", port=6379)
 
 
-@router.post("/", response_model=RFP, status_code=status.HTTP_201_CREATED)
-async def create_rfp(rfp: RFPCreate, current_user: User = Depends(get_current_user)):
-    # Logic to create a new RFP
-    # Example:
-    # db_rfp = await RFP.create(**rfp.dict(), user_id=current_user.id)
-    # return db_rfp
-    pass
+@router.post("/upload", response_model=RFP, status_code=status.HTTP_201_CREATED)
+async def create_rfp(
+    rfp: RFPCreate = Depends(), current_user: User = Depends(get_current_user)
+):
+    """Upload an RFP file to the server.
+    Accepts pdf files
+
+    * caches the file in Redis, based on a unique file_id
+
+    Returns the RFP object with the file_id
+    """
+    if rfp.file.content_type != "application/pdf":
+        raise InvalidFileUploadException(content_type=rfp.file.content_type)
+
+    # Generate a unique identifier for the file
+    file_id = str(uuid.uuid4())
+
+    # Store the file data in Redis
+    file_data = await rfp.file.read()
+    redis_client.set(file_id, file_data, ex=3600)  # expire in 1 hour
+
+    # maybe save the persistent rfp thing in there
+    rfp_response = RFPResponse(
+        file_id=file_id,
+        user_id=current_user.id,
+        description=rfp.description,
+        title=rfp.title,
+    )
+    return rfp_response
 
 
 @router.get("/{rfp_id}", response_model=RFP)

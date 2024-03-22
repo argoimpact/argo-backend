@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from fastapi import UploadFile, File
 
 
 class RFPBase(BaseModel):
@@ -7,8 +8,15 @@ class RFPBase(BaseModel):
 
 
 class RFPCreate(RFPBase):
+    file: UploadFile = File(...)
     pass
 
 
 class RFPUpdate(RFPBase):
     pass
+
+
+class RFPResponse(RFPBase):
+    id: str
+    user_id: str
+    file_id: str

@@ -6,9 +6,9 @@ import httpx
 
 import redis
 
-from utils.security import ALGORITHM, CLERK_SECRET_KEY, CLERK_API_KEY, verify_token
-from config import CLERK_API_ENDPOINT, REDIS_HOST
-from models.user import User
+from app.utils.security import verify_token, CLERK_SECRET_KEY
+from app.config import CLERK_API_ENDPOINT, REDIS_HOST
+from app.models.user import User
 
 bearer_scheme = HTTPBearer()
 
@@ -29,7 +29,7 @@ async def get_current_user(token: str = Depends(bearer_scheme)):
         async with httpx.AsyncClient() as client:
             response = await client.get(
                 f"{CLERK_API_ENDPOINT}/{user_id}",
-                headers={"Authorization": f"Bearer {CLERK_API_KEY}"},
+                headers={"Authorization": f"Bearer {CLERK_SECRET_KEY}"},
             )
             response.raise_for_status()
             user_data = response.json()
