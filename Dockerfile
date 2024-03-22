@@ -1,20 +1,24 @@
-# Use the official Python base image
-FROM python:3.10-slim
-
-# Set the working directory in the container
+# Build stage
+FROM python:3.10-slim as build-stage
 WORKDIR /app
-
-# Copy the requirements file to the container
 COPY requirements.txt .
-
-# Install the project dependencies
-RUN pip install --no-cache-dir -r requirements.txt
-
-# Copy the rest of the project files to the container
+RUN pip install --no-cache-dir --jobs=4 --max-workers=4 -r requirements.txt
 COPY . .
 
-# Expose the port that the FastAPI server will run on
-EXPOSE 8000
+# Runtime stage
+FROM python:3.10-slim
+RUN adduser --disabled-password --no-create-home app
+WORKDIR /app
+COPY --from=build-stage /app /app
+RUN pip install --no-cache-dir --jobs=4 --max-workers=4 -r requirements.txt
 
-# Start the FastAPI server
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+ENV HOST=0.0.0.0
+ENV PORT=8000
+
+EXPOSE $PORT
+USER app
+
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s \
+    CMD curl -f http://localhost:$PORT/health || exit 1
+
+CMD ["uvicorn", "main:app", "--host", "${HOST}", "--port", "${PORT}"]
