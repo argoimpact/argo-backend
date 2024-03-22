@@ -29,10 +29,10 @@ jobs:
           key: ${{ secrets.DROPLET_SSH_KEY }}
           port: 22
           script: |
-            set -e # exit if something returns non zero status
+            set -e # Exit if something returns a non-zero status
+            cd /path/to/your/app # Adjust this path
             docker login ghcr.io -u ${{ github.actor }} --password-stdin <<< ${{ secrets.GITHUB_TOKEN }}
-            docker pull ghcr.io/${{ github.repository }}:sha-${{ github.sha }}
-            docker stop argo-backend || true # don't fail here since the container might not exist
-            docker rm argo-backend || true # don't fail here since the container might not exist
-            docker run -d --name argo-backend -p 8000:8000 ghcr.io/${{ github.repository }}:sha-${{ github.sha }}
-            echo "Docker image running now!!!!"
+            docker-compose pull web # Pull the latest version of your app service image
+            docker-compose down # Take down the current containers
+            docker-compose up -d # Start the containers in detached mode
+            echo "Application and Redis services are up and running!"
