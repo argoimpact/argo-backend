@@ -27,16 +27,27 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: copy file via ssh password
-        uses: appleboy/scp-action@v0.1.7
-        with:
-          host: ${{ secrets.DROPLET_IP }}
-          username: ${{ secrets.DROPLET_USER}}
-          key: ${{ secrets.DROPLET_SSH_KEY}}
-          # password: ${{ secrets.PASSWORD }}
-          port: 22
-          source: "docker-compose.yml"
-          target: ${{ env.APP_DIR }}
+      - name: ssh docker compose
+        env:
+          APP_DIR: ${{ env.APP_DIR }}
+          SSH_KEY: ${{ secrets.DROPLET_SSH_KEY }}
+        run: |
+          mkdir -p ~/.ssh
+          echo "$SSH_KEY" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+
+          # Optional: Disable host key checking (for automation purposes)
+          echo "Host *" > ~/.ssh/config
+          echo "    StrictHostKeyChecking no" >> ~/.ssh/config
+          echo "    UserKnownHostsFile=/dev/null" >> ~/.ssh/config
+          chmod 644 ~/.ssh/config
+
+          REMOTE_USER=${{ secrets.DROPLET_USER }}
+          REMOTE_HOST=${{ secrets.DROPLET_IP }}
+          REMOTE_PATH=${{ env.APP_DIR }}
+          LOCAL_FILE_PATH="./docker-compose.yml"
+
+          scp $LOCAL_FILE_PATH ${REMOTE_USER}@${REMOTE_HOST}:${REMOTE_PATH}
 
       - name: Deploy to Droplet
         uses: appleboy/ssh-action@master
