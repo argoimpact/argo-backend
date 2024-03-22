@@ -2,6 +2,7 @@ version: '3.8'
 services:
   web:
     build: .
+    image: ${REGISTRY}/${IMAGE_NAME}/web:${IMAGE_TAG}
     ports:
       - "8000:8000"
     depends_on:
