@@ -27,20 +27,16 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Copy docker-compose.yml to Droplet
-        uses: appleboy/ssh-action@master
+      - name: copy file via ssh password
+        uses: appleboy/scp-action@v0.1.7
         with:
-          host: ${{ secrets.DROPLET_IP}}
-          username: ${{ secrets.DROPLET_USER }}
+          host: ${{ secrets.DROPLET_IP }}
+          username: ${{ secrets.DROPLET_USER}}
           key: ${{ secrets.DROPLET_SSH_KEY}}
-          script: |
-            mkdir -p ${{ env.APP_DIR }}
-
-            # start ssh agent for shell and copy key
-            eval $(ssh-agent)
-            echo ${{secrets.DROPLET_SSH_KEY}} | ssh-add -
-
-            scp -r docker-compose.yml ${{ secrets.DROPLET_USER }}@${{ secrets.DROPLET_IP}}:${{ env.APP_DIR }}
+          # password: ${{ secrets.PASSWORD }}
+          # port: ${{ secrets.PORT }}
+          source: "docker-compose.yml"
+          target: ${{ env.APP_DIR }}
 
       - name: Deploy to Droplet
         uses: appleboy/ssh-action@master
