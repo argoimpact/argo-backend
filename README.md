@@ -5,7 +5,18 @@ Running a uvicorn server with a redis in memory db for caching
 # building
 
 ```
+python -m venv venv
+source venv/bin/activate
+```
+
+```
 docker compose up --build
+```
+
+## testing
+
+```
+pytest
 ```
 
 ## login to ghcr
