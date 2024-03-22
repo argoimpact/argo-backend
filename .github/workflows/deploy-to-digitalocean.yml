@@ -31,7 +31,7 @@ jobs:
           script: |
             set -e # exit if something returns non zero status
             docker login ghcr.io -u ${{ github.actor }} --password-stdin <<< ${{ secrets.GITHUB_TOKEN }}
-            docker pull ghcr.io/${{ github.repository }}:${{ github.sha }}
+            docker pull ghcr.io/${{ github.repository }}:sha-${{ github.sha }}
             docker stop argo-backend || true # don't fail here since the container might not exist
             docker rm argo-backend || true # don't fail here since the container might not exist
             docker run -d --name argo-backend -p 8000:8000 ghcr.io/${{ github.repository }}:sha-${{ github.sha }}
