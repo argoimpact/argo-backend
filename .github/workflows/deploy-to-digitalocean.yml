@@ -64,6 +64,12 @@ jobs:
           script: |
             set -e # Exit if something returns a non-zero status
             cd ${{ env.APP_DIR }}
+
+            # set environment variables in the script
+            export REGISTRY=${{ env.REGISTRY }}
+            export IMAGE_NAME=${{ env.IMAGE_NAME }}
+            export IMAGE_TAG=${{ env.IMAGE_TAG }}
+
             docker login ghcr.io -u ${{ github.actor }} --password-stdin <<< ${{ secrets.GITHUB_TOKEN }}
 
             docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/web:${{ env.IMAGE_TAG }} # Pull the latest version of your app service image
