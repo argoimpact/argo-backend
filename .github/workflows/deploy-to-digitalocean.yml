@@ -37,6 +37,7 @@ jobs:
             set -e # Exit if something returns a non-zero status
             docker login ghcr.io -u ${{ github.actor }} --password-stdin <<< ${{ secrets.GITHUB_TOKEN }}
 
+            docker compose pull $REGISTRY/$IMAGE_NAME/web:$IMAGE_TAG # Pull the latest version of your app service image
             docker compose pull web # Pull the latest version of your app service image
             docker compose down # Take down the current containers
             docker compose up -d # Start the containers in detached mode
