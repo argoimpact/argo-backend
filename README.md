@@ -23,3 +23,7 @@ pip review --auto
 pip freeze > requirements.txt
 # add/commit/push
 ```
+
+# docs
+
+http://localhost:8000/docs
