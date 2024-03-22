@@ -10,6 +10,7 @@ env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
   IMAGE_TAG: ${{ github.sha }}
+  APP_DIR: /var/lib/argo-docker-compose
 
 jobs:
   deploy:
@@ -26,6 +27,16 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      - name: Copy docker-compose.yml to Droplet
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.DROPLET_IP}}
+          username: ${{ secrets.DROPLET_USER }}
+          key: ${{ secrets.DROPLET_SSH_KEY}}
+          script: |
+            mkdir -p ${{ env.APP_DIR }}
+            scp -r docker-compose.yml ${{ secrets.DROPLET_USER }}@${{ secrets.DROPLET_IP}}:${{ env.APP_DIR }}
+
       - name: Deploy to Droplet
         uses: appleboy/ssh-action@master
         with:
@@ -35,6 +46,7 @@ jobs:
           port: 22
           script: |
             set -e # Exit if something returns a non-zero status
+            cd ${{ env.APP_DIR }}
             docker login ghcr.io -u ${{ github.actor }} --password-stdin <<< ${{ secrets.GITHUB_TOKEN }}
 
             docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/web:${{ env.IMAGE_TAG }} # Pull the latest version of your app service image
