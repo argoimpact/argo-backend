@@ -7,9 +7,10 @@ from app.exceptions import InvalidFileUploadException
 from app.models.user import User
 from app.models.rfp import RFP
 from app.schemas.rfp import RFPCreate, RFPUpdate, RFPResponse
+from app.config import REDIS_HOST
 
 router = APIRouter(dependencies=[Depends(get_current_user)])
-redis_client = Redis(host="redis", port=6379)
+redis_client = Redis(host=REDIS_HOST, port=6379)
 
 
 @router.post("/upload", response_model=RFP, status_code=status.HTTP_201_CREATED)
