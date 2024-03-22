@@ -35,6 +35,11 @@ jobs:
           key: ${{ secrets.DROPLET_SSH_KEY}}
           script: |
             mkdir -p ${{ env.APP_DIR }}
+
+            # start ssh agent for shell and copy key
+            eval $(ssh-agent)
+            echo ${{secrets.DROPLET_SSH_KEY}} | ssh-add -
+
             scp -r docker-compose.yml ${{ secrets.DROPLET_USER }}@${{ secrets.DROPLET_IP}}:${{ env.APP_DIR }}
 
       - name: Deploy to Droplet
