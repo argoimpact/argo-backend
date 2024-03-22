@@ -50,6 +50,11 @@ jobs:
           scp $LOCAL_FILE_PATH ${REMOTE_USER}@${REMOTE_HOST}:${REMOTE_PATH}
 
       - name: Deploy to Droplet
+        env:
+          APP_DIR: ${{ env.APP_DIR }}
+          REGISTRY: ${{ env.REGISTRY }}
+          IMAGE_NAME: ${{ env.IMAGE_NAME }}
+          IMAGE_TAG: ${{ env.IMAGE_TAG }}
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.DROPLET_IP }}
