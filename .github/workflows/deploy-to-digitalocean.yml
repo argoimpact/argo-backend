@@ -33,7 +33,5 @@ jobs:
             docker pull ghcr.io/${{ github.repository }}:${{ github.sha }}
             docker stop argo-backend || true
             docker rm argo-backend || true
-            # Now includes port mapping
-            docker system prune -af && \
             docker run -d --name argo-backend -p 8000:8000 ghcr.io/${{ github.repository }}:${{ github.sha }}
             echo "Docker image running now!!!!"
