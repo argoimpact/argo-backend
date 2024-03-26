@@ -19,7 +19,7 @@ class AppConfig(BaseSettings):
     ## OpenAI
     embedding_model_small: str = "text-embedding-3-small"
     embedding_model_large: str = "text-embedding-3-large"
-    embedding_model_ada: str = "text-embeding-ada-002"
+    embedding_model_ada: str = "text-embedding-ada-002"
 
     # embedding model used for each pinecone index
     embeddings_config: dict[str, str] = {

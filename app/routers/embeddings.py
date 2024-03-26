@@ -9,7 +9,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 router = APIRouter()
 
 
-@router.post("/embeddings/create")
+@router.post("/generate")
 def create_embedding(
     text: Union[str, List[str]],
     openai_client: openai.Client = Depends(get_openai_client),
@@ -18,4 +18,4 @@ def create_embedding(
     response: EmbeddingResponse = generate_embedding(request, openai_client)
 
     # upsert to database
-    return {"message": "Create embedding"}
+    return {"message": dict(response)}

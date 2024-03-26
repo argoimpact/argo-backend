@@ -3,7 +3,7 @@ import logging
 from fastapi import FastAPI, UploadFile
 
 from app.config import setup_logging
-from app.routers import hello_world, rfp, chat
+from app.routers import hello_world, rfp, chat, embeddings
 
 setup_logging()
 
@@ -14,6 +14,7 @@ app.include_router(
 )
 app.include_router(rfp.router, prefix="/rfp", tags=["rfp"])
 app.include_router(chat.router, prefix="/api/chat", tags=["Chat"])
+app.include_router(embeddings.router, prefix="/embeddings", tags=["Embeddings"])
 
 
 @app.get("/")
