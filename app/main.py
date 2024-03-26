@@ -1,8 +1,11 @@
+import logging
+
 from fastapi import FastAPI, UploadFile
-from dotenv import load_dotenv
+
+from app.config import setup_logging
 from app.routers import hello_world, rfp, chat
 
-load_dotenv()
+setup_logging()
 
 app = FastAPI()
 

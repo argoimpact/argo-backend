@@ -1,18 +1,18 @@
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPBearer
-from jose import JWTError, jwt
 
 import httpx
 
 import redis
 
-from app.utils.security import verify_token, CLERK_SECRET_KEY
-from app.config import CLERK_API_ENDPOINT, REDIS_HOST
+from app.utils.security import verify_token
+from app.utils.openai import openai_client
+from app.config import app_config
 from app.models.user import User
 
 bearer_scheme = HTTPBearer()
 
-redis_client = redis.Redis(host=REDIS_HOST, port=6379)
+redis_client = redis.Redis(host=app_config.redis_host, port=6379)
 
 
 async def get_current_user(token: str = Depends(bearer_scheme)):
@@ -28,8 +28,8 @@ async def get_current_user(token: str = Depends(bearer_scheme)):
     try:
         async with httpx.AsyncClient() as client:
             response = await client.get(
-                f"{CLERK_API_ENDPOINT}/{user_id}",
-                headers={"Authorization": f"Bearer {CLERK_SECRET_KEY}"},
+                f"{app_config.clerk_api_endpoint}/{user_id}",
+                headers={"Authorization": f"Bearer {app_config.clerk_secret_key}"},
             )
             response.raise_for_status()
             user_data = response.json()
@@ -43,3 +43,7 @@ async def get_current_user(token: str = Depends(bearer_scheme)):
     redis_client.set(user.id, user.dict())
 
     return user
+
+
+def get_openai_client():
+    return openai_client

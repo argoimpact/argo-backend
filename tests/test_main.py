@@ -3,7 +3,16 @@ import pytest
 from fastapi import FastAPI
 from starlette.status import HTTP_200_OK
 
+import logging
+
 from app.main import app  # Adjust the import path according to your project structure
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+)
+
+logger = logging.getLogger(__name__)
 
 
 @pytest.mark.anyio
@@ -12,3 +21,12 @@ async def test_read_root():
         response = await ac.get("/")
         assert response.status_code == HTTP_200_OK
         assert response.json() == {"Hello": "World!"}
+
+
+@pytest.mark.anyio
+def test_config():
+    from app.config import AppConfig
+
+    app_config = AppConfig()
+    assert app_config.openai_api_key
+    assert app_config.embeddings_config
