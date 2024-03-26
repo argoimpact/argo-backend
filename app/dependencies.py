@@ -7,6 +7,7 @@ import redis
 
 from app.utils.security import verify_token
 from app.utils.openai import openai_client
+from app.utils.pinecone import pinecone_client
 from app.config import app_config
 from app.models.user import User
 
@@ -47,3 +48,7 @@ async def get_current_user(token: str = Depends(bearer_scheme)):
 
 def get_openai_client():
     return openai_client
+
+
+def get_pinecone_client():
+    return pinecone_client

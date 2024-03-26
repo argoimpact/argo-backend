@@ -16,6 +16,11 @@ class AppConfig(BaseSettings):
     clerk_api_endpoint: str = "https://api.clerk.com/v1"
     redis_host: str = "redis"
 
+    ## OpenAI
+    embedding_model_small: str = "text-embedding-3-small"
+    embedding_model_large: str = "text-embedding-3-large"
+    embedding_model_ada: str = "text-embeding-ada-002"
+
     # embedding model used for each pinecone index
     embeddings_config: dict[str, str] = {
         "index1": "embedding_model1",
@@ -29,7 +34,6 @@ class AppConfig(BaseSettings):
     openai_api_key: str
     clerk_secret_key: str
     clerk_api_key: str
-
     pinecone_api_key: str
 
 

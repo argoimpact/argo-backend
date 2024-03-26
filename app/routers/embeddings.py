@@ -1,29 +1,21 @@
-from typing import List
+from typing import List, Union
+import openai
+from app.config import app_config
+from app.dependencies import get_openai_client
+from app.utils.embeddings import generate_embedding, EmbeddingRequest, EmbeddingResponse
 from fastapi import APIRouter, Depends, HTTPException, status
+
 
 router = APIRouter()
 
 
 @router.post("/embeddings/create")
-def create_embedding(embeddings: List[float]):
+def create_embedding(
+    text: Union[str, List[str]],
+    openai_client: openai.Client = Depends(get_openai_client),
+):
+    request = EmbeddingRequest(text=text, model=app_config.embedding_model_ada)
+    response: EmbeddingResponse = generate_embedding(request, openai_client)
+
+    # upsert to database
     return {"message": "Create embedding"}
-
-
-@router.get("/embeddings/{embedding_id}")
-def get_embedding(embedding_id: str):
-    return {"message": f"Get embedding with id {embedding_id}"}
-
-
-@router.post("/embeddings/{embedding_id}/update")
-def update_embedding(embedding_id: str):
-    return {"message": f"Update embedding with id {embedding_id}"}
-
-
-@router.delete("/embeddings/{embedding_id}/delete")
-def delete_embedding(embedding_id: str):
-    return {"message": f"Delete embedding with id {embedding_id}"}
-
-
-@router.get("/embeddings/{embedding_id}/similar")
-def get_similar_embeddings(embedding_id: str):
-    return {"message": f"Get similar embeddings for embedding with id {embedding_id}"}

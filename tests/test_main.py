@@ -1,11 +1,10 @@
 from httpx import AsyncClient
 import pytest
-from fastapi import FastAPI
 from starlette.status import HTTP_200_OK
 
 import logging
 
-from app.main import app  # Adjust the import path according to your project structure
+from app.main import app
 
 logging.basicConfig(
     level=logging.INFO,

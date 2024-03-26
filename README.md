@@ -2,6 +2,10 @@
 
 Running a uvicorn server with a redis in memory db for caching
 
+## Local development
+
+`app/congif.py` uses pydantic BaseSettings to load environment variables. for local development, create a .env file and put relevant environment variables in there. DON'T COMMIT THIS FILE
+
 # building
 
 ```
