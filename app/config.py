@@ -34,6 +34,8 @@ class AppConfig(BaseSettings):
     clerk_secret_key: str
     clerk_api_key: str
     pinecone_api_key: str
+    adobe_client_id: str # TODO: add it to Github
+    adobe_client_secret: str
 
 
 app_config = AppConfig()
