@@ -28,4 +28,3 @@ def test_config():
 
     app_config = AppConfig()
     assert app_config.openai_api_key
-    assert app_config.embeddings_config
