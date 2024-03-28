@@ -1,6 +1,7 @@
 import json
 import io
 from io import BufferedReader, BufferedWriter
+import zipfile
 from app.config import app_config
 
 from adobe.pdfservices.operation.auth.credentials import Credentials
@@ -22,6 +23,7 @@ if not client_id or not client_secret:
 
 adobe_credentials = Credentials.service_principal_credentials_builder().with_client_id(
             client_id).with_client_secret(client_secret).build()
+json_file_name = "structuredData.json"
 
 
 def extract(adobe_credentials: ServicePrincipalCredentials, input_stream: BufferedReader):
@@ -35,11 +37,17 @@ def extract(adobe_credentials: ServicePrincipalCredentials, input_stream: Buffer
                 .build()
     extract_pdf_operation.set_options(extract_pdf_options)
     result: FileRef = extract_pdf_operation.execute(execution_context)
-    strings_io = io.StringIO()
     
-    result.write_to_stream(strings_io)
+    result.save_as("/tmp/anything")
     
-    return json.loads(strings_io.seek(0).read().decode("utf-8"))
+    return unzip_file()
+
+def unzip_file():
+    with zipfile.ZipFile("/tmp/anything", 'r') as zip_ref:
+        # zip_ref.extractall("/tmp/anything")
+        file_contents = zip_ref.read(json_file_name).decode("utf-8")
+    
+    return json.loads(file_contents)
 
 
 
