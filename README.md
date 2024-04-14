@@ -8,14 +8,12 @@ Running a uvicorn server with a redis in memory db for caching
 
 # building
 
-```
-python -m venv venv
-source venv/bin/activate
-```
+We're using `poetry` for dependency management and building.
 
-```
-docker compose up --build
-```
+(prereq, install pyenv and select the right python version)
+
+1. Install poetry to your system.
+2. Poetry install
 
 ## testing
 
