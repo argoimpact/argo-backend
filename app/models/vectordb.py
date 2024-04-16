@@ -6,6 +6,7 @@ from pydantic import BaseModel
 
 class VectorMetaData(BaseModel):
     text: str
+    title: str
 
 
 class Vector(BaseModel):
