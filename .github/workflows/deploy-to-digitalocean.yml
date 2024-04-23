@@ -78,7 +78,7 @@ jobs:
 
             docker login ghcr.io -u ${{ github.actor }} --password-stdin <<< ${{ secrets.GITHUB_TOKEN }}
 
-            docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/web:${{ env.IMAGE_TAG }} # Pull the latest version of your app service image
+            docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }} # Pull the latest version of your app service image
 
             docker compose down # Take down the current containers
             docker compose up -d # Start the containers in detached mode
