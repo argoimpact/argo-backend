@@ -1,0 +1,27 @@
+[tool.poetry]
+name = "argo-backend"
+version = "0.1.0"
+description = ""
+authors = ["Patrick Hall <phalldev@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+openai = "^1.16.0"
+pinecone-client = "^3.2.2"
+pydantic = "^2.6.4"
+redis = "^5.0.3"
+uvicorn = "^0.29.0"
+fastapi = "^0.110.1"
+pydantic-settings = "^2.2.1"
+python-jose = "^3.3.0"
+python-multipart = "^0.0.9"
+langchain = "^0.1.16"
+pdfminer-six = "^20231228"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.1.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
